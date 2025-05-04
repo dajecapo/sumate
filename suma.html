@@ -1,0 +1,246 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¿Tienes algo que aportar?</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+      color: #333;
+    }
+
+    section {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #4a148c;
+      margin-bottom: 10px;
+    }
+
+    .boton-desplegar {
+      display: block;
+      margin: 0 auto 20px auto;
+      background-color: #6a1b9a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: fit-content;
+    }
+
+    .boton-desplegar.cerrar {
+      background-color: #d32f2f;
+    }
+
+    .boton-desplegar:hover {
+      opacity: 0.9;
+    }
+
+    form {
+      display: none;
+      transition: all 0.3s ease;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .captcha-box {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .captcha-box input {
+      width: 80px;
+      margin-left: 10px;
+    }
+
+    .checkmark {
+      margin-left: 10px;
+      font-size: 20px;
+      color: green;
+      display: none;
+    }
+
+    button[type="button"] {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #6a1b9a;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="button"]:hover {
+      background-color: #4a148c;
+    }
+
+    .success {
+      color: green;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      section {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .boton-desplegar {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section>
+  <h2>¿Tienes algo que aportar?</h2>
+  <button class="boton-desplegar" id="botonMostrar">¡Súmate!</button>
+
+  <form id="sumateForm">
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="Nombre" required>
+
+    <label for="edad">Edad</label>
+    <input type="number" id="edad" name="Edad" required>
+
+    <label for="area">Areas del conocimiento</label>
+    <input type="text" id="area" name="Areas del conocimiento" required>
+
+    <label for="correo">Email</label>
+    <input type="email" id="correo" name="Email" required>
+
+    <label for="telefono">Telefono</label>
+    <input type="tel" id="telefono" name="Telefono">
+
+    <label for="fecha">Fecha</label>
+    <input type="date" id="fecha" name="Fecha">
+
+    <div class="captcha-box">
+      <label id="captchaLabel"></label>
+      <input type="number" id="captcha" required>
+      <span class="checkmark" id="checkmark">✅</span>
+    </div>
+
+    <button type="button" id="toggleButton">Enviar formulario</button>
+    <div class="success" id="mensajeExito" style="display:none;">¡Formulario enviado con éxito!</div>
+  </form>
+</section>
+
+<script>
+  const form = document.getElementById('sumateForm');
+  const toggleBtn = document.getElementById('toggleButton');
+  const mostrarBtn = document.getElementById('botonMostrar');
+  const captchaInput = document.getElementById('captcha');
+  const captchaLabel = document.getElementById('captchaLabel');
+  const checkmark = document.getElementById('checkmark');
+  const mensajeExito = document.getElementById('mensajeExito');
+
+  let num1 = 0, num2 = 0, captchaValido = false;
+
+  function generarCaptcha() {
+    num1 = Math.floor(Math.random() * 9) + 1;
+    num2 = Math.floor(Math.random() * 9) + 1;
+    captchaLabel.textContent = `¿Cuánto es ${num1} + ${num2}?`;
+    captchaInput.value = '';
+    checkmark.style.display = 'none';
+    captchaValido = false;
+  }
+
+  captchaInput.addEventListener('input', () => {
+    const respuesta = parseInt(captchaInput.value);
+    if (respuesta === num1 + num2) {
+      checkmark.style.display = 'inline';
+      captchaValido = true;
+    } else {
+      checkmark.style.display = 'none';
+      captchaValido = false;
+    }
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    if (!form.checkValidity() || !captchaValido) {
+      alert('Por favor completa los campos obligatorios y resuelve el captcha correctamente.');
+      return;
+    }
+
+    const datos = {
+      Nombre: form.nombre.value,
+      Edad: form.edad.value,
+      'Areas del conocimiento': form.area.value,
+      Email: form.correo.value,
+      Telefono: form.telefono.value || '',
+      Fecha: form.fecha.value,
+      Estatus: 'Pendiente'
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbx9pyzZyYlEtGNzJMVZr0wtesGYYsx5rInDB1167OzwMBVOIg29prncihmUyfe7qw4qvQ/exec', {
+      method: 'POST',
+      body: new URLSearchParams(datos)
+    })
+    .then(res => {
+      if (res.ok) {
+        mensajeExito.style.display = 'block';
+        form.reset();
+        generarCaptcha();
+        checkmark.style.display = 'none';
+      } else {
+        alert('Hubo un error al enviar el formulario. Intenta de nuevo.');
+      }
+    })
+    .catch(() => alert('Error de conexión con el servidor.'));
+  });
+
+  mostrarBtn.addEventListener('click', () => {
+    if (form.style.display === 'none' || form.style.display === '') {
+      form.style.display = 'block';
+      generarCaptcha();
+      mostrarBtn.textContent = 'Cerrar formulario';
+      mostrarBtn.classList.add('cerrar');
+    } else {
+      form.style.display = 'none';
+      mostrarBtn.textContent = '¡Súmate!';
+      mostrarBtn.classList.remove('cerrar');
+      mensajeExito.style.display = 'none';
+      form.reset();
+    }
+  });
+
+  form.style.display = 'none';
+  generarCaptcha();
+</script>
+
+</body>
+</html>
