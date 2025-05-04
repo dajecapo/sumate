@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -143,7 +144,7 @@
     <input type="email" id="correo" name="Email" required>
 
     <label for="telefono">Telefono</label>
-    <input type="tel" id="telefono" name="Telefono">
+    <input type="tel" id="telefono" name="Telefono" pattern="\\d{10}" required title="Ingresa un número de 10 dígitos">
 
     <label for="fecha">Fecha</label>
     <input type="date" id="fecha" name="Fecha">
@@ -192,21 +193,21 @@
 
   toggleBtn.addEventListener('click', () => {
     if (!form.checkValidity() || !captchaValido) {
-      alert('Por favor completa los campos obligatorios y resuelve el captcha correctamente.');
+      alert('Por favor completa los campos obligatorios correctamente y resuelve el captcha.');
       return;
     }
 
     const datos = {
       Nombre: form.nombre.value,
       Edad: form.edad.value,
-      'Areas del conocimiento': form.area.value,
+      "Areas del conocimiento": form.area.value,
       Email: form.correo.value,
-      Telefono: form.telefono.value || '',
+      Telefono: form.telefono.value,
       Fecha: form.fecha.value,
-      Estatus: 'Pendiente'
+      Estatus: "Pendiente"
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbx9pyzZyYlEtGNzJMVZr0wtesGYYsx5rInDB1167OzwMBVOIg29prncihmUyfe7qw4qvQ/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxbl6XDcWRQ9tqtvSKWrsW_3eI17Ayaa3FxP9ZlIsZ1cU4CN475c448bz7WQFY7vSom/exec', {
       method: 'POST',
       body: new URLSearchParams(datos)
     })
