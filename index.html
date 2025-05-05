@@ -129,7 +129,7 @@
     <input type="email" id="email" name="email" required>
 
     <label for="telefono">Telefono</label>
-    <input type="tel" id="telefono" name="telefono" pattern="\\d{10}" required>
+    <input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" required>
 
     <label for="fecha">Fecha</label>
     <input type="date" id="fecha" name="fecha">
@@ -182,7 +182,7 @@
     mensajeExito.style.display = 'none';
     mensajeError.style.display = 'none';
 
-    const telefonoValido = /^\d{10}$/.test(form.telefono.value.trim());
+    const telefonoValido = /^[0-9]{10}$/.test(form.telefono.value.trim());
     if (!captchaValido || !telefonoValido) {
       mensajeError.textContent = "Verifica que el captcha y el teléfono sean correctos.";
       mensajeError.style.display = 'block';
