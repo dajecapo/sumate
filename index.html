@@ -137,24 +137,24 @@
   <h2>¿Tienes algo que aportar?</h2>
   <button class="boton-desplegar" id="botonMostrar">¡Súmate!</button>
 
-  <form id="sumateForm" novalidate>
+  <form id="sumateForm">
     <label for="nombre">Nombre</label>
-    <input type="text" id="nombre" name="Nombre" required>
+    <input type="text" id="nombre" name="nombre" required>
 
     <label for="edad">Edad</label>
-    <input type="number" id="edad" name="Edad" required>
+    <input type="number" id="edad" name="edad" required>
 
-    <label for="area">Areas del conocimiento</label>
-    <input type="text" id="area" name="Areas del conocimiento" required>
+    <label for="area_conocimiento">Areas del conocimiento</label>
+    <input type="text" id="area_conocimiento" name="area_conocimiento" required>
 
-    <label for="correo">Email</label>
-    <input type="email" id="correo" name="Email" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
 
     <label for="telefono">Telefono</label>
-    <input type="tel" id="telefono" name="Telefono" required>
+    <input type="tel" id="telefono" name="telefono" pattern="\d{10}" required>
 
     <label for="fecha">Fecha</label>
-    <input type="date" id="fecha" name="Fecha">
+    <input type="date" id="fecha" name="fecha">
 
     <div class="captcha-box">
       <label id="captchaLabel"></label>
@@ -204,21 +204,21 @@
     mensajeExito.style.display = 'none';
     mensajeError.style.display = 'none';
 
-    const telefonoValido = /^\d{10}$/.test(form.telefono.value);
-    if (!form.nombre.value || !form.edad.value || !form.area.value || !form.correo.value || !telefonoValido || !captchaValido) {
-      mensajeError.textContent = "Todos los campos obligatorios deben estar bien llenados.";
+    const telefonoValido = /^\d{10}$/.test(form.telefono.value.trim());
+    if (!captchaValido || !telefonoValido) {
+      mensajeError.textContent = "Verifica que el captcha y el teléfono sean correctos.";
       mensajeError.style.display = 'block';
       return;
     }
 
     const datos = {
-      Nombre: form.nombre.value,
-      Edad: form.edad.value,
-      "Areas del conocimiento": form.area.value,
-      Email: form.correo.value,
-      Telefono: form.telefono.value,
-      Fecha: form.fecha.value,
-      Estatus: "Pendiente"
+      nombre: form.nombre.value.trim(),
+      edad: form.edad.value.trim(),
+      area_conocimiento: form.area_conocimiento.value.trim(),
+      email: form.email.value.trim(),
+      telefono: form.telefono.value.trim(),
+      fecha: form.fecha.value,
+      estatus: "Pendiente"
     };
 
     fetch('https://script.google.com/macros/s/AKfycbxbl6XDcWRQ9tqtvSKWrsW_3eI17Ayaa3FxP9ZlIsZ1cU4CN475c448bz7WQFY7vSom/exec', {
