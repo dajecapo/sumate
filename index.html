@@ -88,7 +88,7 @@
       display: none;
     }
 
-    button[type="button"] {
+    button[type="submit"] {
       margin-top: 30px;
       width: 100%;
       background-color: #6a1b9a;
@@ -101,12 +101,19 @@
       transition: background-color 0.3s ease;
     }
 
-    button[type="button"]:hover {
+    button[type="submit"]:hover {
       background-color: #4a148c;
     }
 
     .success {
       color: green;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
       margin-top: 20px;
       text-align: center;
       font-weight: bold;
@@ -155,19 +162,20 @@
       <span class="checkmark" id="checkmark">✅</span>
     </div>
 
-    <button type="button" id="toggleButton">Enviar formulario</button>
+    <button type="submit">Enviar formulario</button>
     <div class="success" id="mensajeExito" style="display:none;">¡Formulario enviado con éxito!</div>
+    <div class="error" id="mensajeError" style="display:none;">Error al enviar. Verifica los datos.</div>
   </form>
 </section>
 
 <script>
   const form = document.getElementById('sumateForm');
-  const toggleBtn = document.getElementById('toggleButton');
   const mostrarBtn = document.getElementById('botonMostrar');
   const captchaInput = document.getElementById('captcha');
   const captchaLabel = document.getElementById('captchaLabel');
   const checkmark = document.getElementById('checkmark');
   const mensajeExito = document.getElementById('mensajeExito');
+  const mensajeError = document.getElementById('mensajeError');
 
   let num1 = 0, num2 = 0, captchaValido = false;
 
@@ -191,9 +199,15 @@
     }
   });
 
-  toggleBtn.addEventListener('click', () => {
-    if (!form.checkValidity() || !captchaValido) {
-      alert('Por favor completa los campos obligatorios correctamente y resuelve el captcha.');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    mensajeExito.style.display = 'none';
+    mensajeError.style.display = 'none';
+
+    if (!captchaValido) {
+      mensajeError.textContent = 'Captcha incorrecto.';
+      mensajeError.style.display = 'block';
       return;
     }
 
@@ -218,10 +232,14 @@
         generarCaptcha();
         checkmark.style.display = 'none';
       } else {
-        alert('Hubo un error al enviar el formulario. Intenta de nuevo.');
+        mensajeError.textContent = 'Error en el servidor. Inténtalo de nuevo.';
+        mensajeError.style.display = 'block';
       }
     })
-    .catch(() => alert('Error de conexión con el servidor.'));
+    .catch(() => {
+      mensajeError.textContent = 'Error de conexión. Revisa tu red.';
+      mensajeError.style.display = 'block';
+    });
   });
 
   mostrarBtn.addEventListener('click', () => {
@@ -235,6 +253,7 @@
       mostrarBtn.textContent = '¡Súmate!';
       mostrarBtn.classList.remove('cerrar');
       mensajeExito.style.display = 'none';
+      mensajeError.style.display = 'none';
       form.reset();
     }
   });
