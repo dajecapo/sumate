@@ -105,18 +105,18 @@
       background-color: #4a148c;
     }
 
-    .success {
-      color: green;
+    .success, .error {
       margin-top: 20px;
       text-align: center;
       font-weight: bold;
     }
 
+    .success {
+      color: green;
+    }
+
     .error {
       color: red;
-      margin-top: 20px;
-      text-align: center;
-      font-weight: bold;
     }
 
     @media (max-width: 600px) {
@@ -137,7 +137,7 @@
   <h2>¿Tienes algo que aportar?</h2>
   <button class="boton-desplegar" id="botonMostrar">¡Súmate!</button>
 
-  <form id="sumateForm">
+  <form id="sumateForm" novalidate>
     <label for="nombre">Nombre</label>
     <input type="text" id="nombre" name="Nombre" required>
 
@@ -151,7 +151,7 @@
     <input type="email" id="correo" name="Email" required>
 
     <label for="telefono">Telefono</label>
-    <input type="tel" id="telefono" name="Telefono" pattern="\\d{10}" required title="Ingresa un número de 10 dígitos">
+    <input type="tel" id="telefono" name="Telefono" required>
 
     <label for="fecha">Fecha</label>
     <input type="date" id="fecha" name="Fecha">
@@ -164,7 +164,7 @@
 
     <button type="submit">Enviar formulario</button>
     <div class="success" id="mensajeExito" style="display:none;">¡Formulario enviado con éxito!</div>
-    <div class="error" id="mensajeError" style="display:none;">Error al enviar. Verifica los datos.</div>
+    <div class="error" id="mensajeError" style="display:none;">Error al enviar. Revisa los campos.</div>
   </form>
 </section>
 
@@ -199,14 +199,14 @@
     }
   });
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-
     mensajeExito.style.display = 'none';
     mensajeError.style.display = 'none';
 
-    if (!captchaValido) {
-      mensajeError.textContent = 'Captcha incorrecto.';
+    const telefonoValido = /^\d{10}$/.test(form.telefono.value);
+    if (!form.nombre.value || !form.edad.value || !form.area.value || !form.correo.value || !telefonoValido || !captchaValido) {
+      mensajeError.textContent = "Todos los campos obligatorios deben estar bien llenados.";
       mensajeError.style.display = 'block';
       return;
     }
@@ -232,12 +232,12 @@
         generarCaptcha();
         checkmark.style.display = 'none';
       } else {
-        mensajeError.textContent = 'Error en el servidor. Inténtalo de nuevo.';
+        mensajeError.textContent = "Error con el servidor. Intenta de nuevo.";
         mensajeError.style.display = 'block';
       }
     })
     .catch(() => {
-      mensajeError.textContent = 'Error de conexión. Revisa tu red.';
+      mensajeError.textContent = "No se pudo conectar con el servidor.";
       mensajeError.style.display = 'block';
     });
   });
